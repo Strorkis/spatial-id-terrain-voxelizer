@@ -8,11 +8,8 @@ export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: {
-      'spatial-id-terrain-voxelizer': path.resolve(__dirname, '../../src'),
-      'react': path.resolve(__dirname, './node_modules/react'),
-      'react-dom': path.resolve(__dirname, './node_modules/react-dom'),
-      'react-map-gl': path.resolve(__dirname, './node_modules/react-map-gl'),
-      'maplibre-gl': path.resolve(__dirname, './node_modules/maplibre-gl')
-    }
+      'spatial-id-terrain-voxelizer': path.resolve(__dirname, '../../src')
+    },
+    dedupe: ['react', 'react-dom', 'react-map-gl', 'maplibre-gl']
   }
 })
