@@ -1,0 +1,113 @@
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+#root {
+  width: 100%;
+  height: 100%;
+}
+
+/* UI Layout Container */
+.overlay-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1000;
+}
+
+/* UI Components */
+.voxel-ui-container {
+  position: absolute;
+  /* Revert to absolute */
+  pointer-events: auto;
+  font-family: sans-serif;
+}
+
+.voxel-config-panel {
+  /* Top-Left */
+  top: 20px;
+  left: 20px;
+
+  width: 240px;
+  max-height: 80vh;
+  overflow-y: auto;
+  background: white;
+  padding: 16px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.voxel-config-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  cursor: pointer;
+}
+
+.voxel-config-header.closed {
+  margin-bottom: 0;
+}
+
+.voxel-control-group {
+  margin-bottom: 16px;
+}
+
+.voxel-control-label {
+  margin-bottom: 4px;
+  font-size: 12px;
+}
+
+.elevation-legend {
+  /* Bottom-Right (Above Default Attribution) */
+  position: absolute;
+  bottom: 40px;
+  right: 10px;
+
+  background: rgba(255, 255, 255, 0.9);
+  padding: 12px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  font-size: 12px;
+}
+
+/* Mobile Responsive */
+@media (max-width: 600px) {
+  .overlay-container {
+    padding: 10px;
+  }
+
+  .voxel-config-panel {
+    /* Mobile: Top Full Width */
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    width: auto;
+    max-height: 50vh;
+  }
+
+  .elevation-legend {
+    /* Mobile: Keep Bottom-Right but adjust height if needed */
+    bottom: 50px;
+    right: 10px;
+    padding: 8px;
+  }
+}

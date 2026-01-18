@@ -1,0 +1,45 @@
+{
+    "name": "spatial-id-terrain-voxelizer",
+    "private": true,
+    "version": "0.1.0",
+    "main": "dist/index.js",
+    "module": "dist/index.mjs",
+    "types": "dist/index.d.ts",
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "import": "./dist/index.mjs",
+            "require": "./dist/index.js"
+        },
+        "./react": {
+            "types": "./dist/react.d.ts",
+            "import": "./dist/react.mjs",
+            "require": "./dist/react.js"
+        }
+    },
+    "peerDependencies": {
+        "react": "^19.0.0",
+        "react-map-gl": "^8.0.0"
+    },
+    "scripts": {
+        "build": "tsup src/index.ts src/react.ts --format cjs,esm --dts",
+        "lint": "eslint .",
+        "dev": "cd examples/demo && vite"
+    },
+    "dependencies": {
+        "@deck.gl/core": "^9.2.5",
+        "@deck.gl/layers": "^9.2.5",
+        "@deck.gl/mesh-layers": "^9.2.5",
+        "@luma.gl/engine": "^9.2.5",
+        "maplibre-gl": "^5.15.0"
+    },
+    "devDependencies": {
+        "@types/react": "^19.2.8",
+        "@types/react-dom": "^19.2.3",
+        "react": "^19.2.3",
+        "react-map-gl": "^8.1.0",
+        "tsup": "^8.3.5",
+        "typescript": "~5.9.3",
+        "eslint": "^9.0.0"
+    }
+}
