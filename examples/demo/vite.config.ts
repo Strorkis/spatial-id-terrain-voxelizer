@@ -10,7 +10,9 @@ export default defineConfig({
     alias: {
       'spatial-id-terrain-voxelizer': path.resolve(__dirname, '../../src'),
       'react': path.resolve(__dirname, './node_modules/react'),
-      'react-dom': path.resolve(__dirname, './node_modules/react-dom')
+      'react-dom': path.resolve(__dirname, './node_modules/react-dom'),
+      'react-map-gl': path.resolve(__dirname, './node_modules/react-map-gl'),
+      'maplibre-gl': path.resolve(__dirname, './node_modules/maplibre-gl')
     }
   }
 })
