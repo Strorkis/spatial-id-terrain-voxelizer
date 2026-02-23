@@ -22,7 +22,7 @@ importers:
         version: 8.1.0(maplibre-gl@5.16.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       spatial-id-terrain-voxelizer:
         specifier: file:../..
-        version: file:../..(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6)(@luma.gl/gltf@9.2.6(@luma.gl/constants@9.2.6)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6))(react-map-gl@8.1.0(maplibre-gl@5.16.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react@19.2.3)
+        version: file:../..(@loaders.gl/core@4.3.4)(@luma.gl/constants@9.2.6)(@luma.gl/core@9.2.6)(@luma.gl/gltf@9.2.6(@luma.gl/constants@9.2.6)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6))(@math.gl/web-mercator@4.1.0)(react-map-gl@8.1.0(maplibre-gl@5.16.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react@19.2.3)
     devDependencies:
       '@eslint/js':
         specifier: ^9.39.1
@@ -156,6 +156,14 @@ packages:
       '@loaders.gl/core': ^4.2.0
       '@luma.gl/core': ~9.2.6
       '@luma.gl/engine': ~9.2.6
+
+  '@deck.gl/mapbox@9.2.9':
+    resolution: {integrity: sha512-KGsh47Rrei0mPf88g1gXi297IKoUj8tTNSGJUjd9oapkmfYAziSCSL1baP66436V37CkfJKyyzFZ2Q10KKG92w==}
+    peerDependencies:
+      '@deck.gl/core': ~9.2.0
+      '@luma.gl/constants': ~9.2.6
+      '@luma.gl/core': ~9.2.6
+      '@math.gl/web-mercator': ^4.1.0
 
   '@deck.gl/mesh-layers@9.2.6':
     resolution: {integrity: sha512-/KjhjoQJRb9lUcDE6pZlHvcto9H5iBCJtUb1/uCb8fahzEAcZBDubAn4RUWjfRyOSmzJfQHrWdNAjflNkL87Yg==}
@@ -1608,6 +1616,13 @@ snapshots:
       '@math.gl/web-mercator': 4.1.0
       earcut: 2.2.4
 
+  '@deck.gl/mapbox@9.2.9(@deck.gl/core@9.2.6)(@luma.gl/constants@9.2.6)(@luma.gl/core@9.2.6)(@math.gl/web-mercator@4.1.0)':
+    dependencies:
+      '@deck.gl/core': 9.2.6
+      '@luma.gl/constants': 9.2.6
+      '@luma.gl/core': 9.2.6
+      '@math.gl/web-mercator': 4.1.0
+
   '@deck.gl/mesh-layers@9.2.6(@deck.gl/core@9.2.6)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))(@luma.gl/gltf@9.2.6(@luma.gl/constants@9.2.6)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6))':
     dependencies:
       '@deck.gl/core': 9.2.6
@@ -2736,10 +2751,11 @@ snapshots:
 
   source-map-js@1.2.1: {}
 
-  spatial-id-terrain-voxelizer@file:../..(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6)(@luma.gl/gltf@9.2.6(@luma.gl/constants@9.2.6)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6))(react-map-gl@8.1.0(maplibre-gl@5.16.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react@19.2.3):
+  spatial-id-terrain-voxelizer@file:../..(@loaders.gl/core@4.3.4)(@luma.gl/constants@9.2.6)(@luma.gl/core@9.2.6)(@luma.gl/gltf@9.2.6(@luma.gl/constants@9.2.6)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6))(@math.gl/web-mercator@4.1.0)(react-map-gl@8.1.0(maplibre-gl@5.16.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react@19.2.3):
     dependencies:
       '@deck.gl/core': 9.2.6
       '@deck.gl/layers': 9.2.6(@deck.gl/core@9.2.6)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))
+      '@deck.gl/mapbox': 9.2.9(@deck.gl/core@9.2.6)(@luma.gl/constants@9.2.6)(@luma.gl/core@9.2.6)(@math.gl/web-mercator@4.1.0)
       '@deck.gl/mesh-layers': 9.2.6(@deck.gl/core@9.2.6)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))(@luma.gl/gltf@9.2.6(@luma.gl/constants@9.2.6)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6))
       '@luma.gl/engine': 9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6))
       maplibre-gl: 5.16.0
@@ -2747,9 +2763,11 @@ snapshots:
       react-map-gl: 8.1.0(maplibre-gl@5.16.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
     transitivePeerDependencies:
       - '@loaders.gl/core'
+      - '@luma.gl/constants'
       - '@luma.gl/core'
       - '@luma.gl/gltf'
       - '@luma.gl/shadertools'
+      - '@math.gl/web-mercator'
 
   split-string@3.1.0:
     dependencies:
