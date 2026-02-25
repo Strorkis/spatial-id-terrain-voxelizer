@@ -222,7 +222,11 @@ export const LayerManager: React.FC<LayerManagerProps> = ({ core, locale }) => {
 
             {showModal && (
                 <div
-                    onClick={() => setShowModal(false)}
+                    onMouseDown={(e) => {
+                        if (e.target === e.currentTarget) {
+                            setShowModal(false);
+                        }
+                    }}
                     style={{
                         position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh',
                         background: 'rgba(0,0,0,0.5)', zIndex: 9999, display: 'flex', justifyContent: 'center', alignItems: 'center'
