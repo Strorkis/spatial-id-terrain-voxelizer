@@ -17,6 +17,7 @@ export const LayerManager: React.FC<LayerManagerProps> = ({ core, locale }) => {
     const [modalForm, setModalForm] = useState<Partial<LayerConfig>>({});
 
     useEffect(() => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const unsubscribe = core.onUpdate((newState: any) => {
             setState({ ...newState });
         });
@@ -72,7 +73,7 @@ export const LayerManager: React.FC<LayerManagerProps> = ({ core, locale }) => {
         } else {
             const newId = 'layer-' + Math.random().toString(36).substr(2, 9);
             core.addLayer({
-                ...(modalForm as any),
+                ...(modalForm as unknown as LayerConfig),
                 id: newId,
                 visible: true
             });
@@ -80,7 +81,7 @@ export const LayerManager: React.FC<LayerManagerProps> = ({ core, locale }) => {
         setShowModal(false);
     };
 
-    const updateModalField = (field: keyof LayerConfig, value: any) => {
+    const updateModalField = (field: keyof LayerConfig, value: unknown) => {
         setModalForm((prev: Partial<LayerConfig>) => ({ ...prev, [field]: value }));
     };
 

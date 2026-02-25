@@ -8,14 +8,14 @@ import {
     MapOverlay,
     type LayerConfig
 } from 'spatial-id-terrain-voxelizer/react';
-import { jaLocale, enLocale } from 'spatial-id-terrain-voxelizer';
+import { type VoxelViewerCore, jaLocale, enLocale } from 'spatial-id-terrain-voxelizer';
 import { useControl } from 'react-map-gl/maplibre';
 import { LayerManager } from './LayerManager';
 import { ElevationLegendControl } from './ElevationLegendControl';
-import { jaUILocale, enUILocale } from './locale';
+import { type UILocaleType, jaUILocale, enUILocale } from './locale';
 import { useState } from 'react';
 
-function VoxelControl({ core }: { core: any }) {
+function VoxelControl({ core }: { core: VoxelViewerCore }) {
     useControl(() => new ElevationLegendControl({ core }), { position: 'bottom-left' });
     return null;
 }
@@ -40,7 +40,7 @@ const INITIAL_VIEW_STATE = {
 };
 
 // 地理院標準ラスタースタイル (言語に応じて動的に変更)
-const getMapStyle = (lang: 'en' | 'ja', uilocale: any): StyleSpecification => ({
+const getMapStyle = (lang: 'en' | 'ja', uilocale: UILocaleType): StyleSpecification => ({
     version: 8,
     sources: {
         'gsi-std': {
@@ -92,15 +92,7 @@ export default function MapComponent() {
         }
     ], [uilocale]);
 
-    // coreが既に存在する場合はレイヤー名を強制更新
-    useMemo(() => {
-        if (!mapRef.current) return;
-        try {
-            // 初回レンダリング時はcoreが初期化されていない可能性があるため、
-            // 初期セットアップはuseTerrainVoxelizerに任せます。
-            // 次回以降の言語変更時は、coreが存在すれば手動で名前を更新します。
-        } catch (e) { }
-    }, [lang]);
+
 
     // useTerrainVoxelizer フックを使用し、MapLibreの描画状態と同期してボクセルを生成します
     // 戻り値として、状態管理を行う core インスタンスと、手動生成用の関数 generateVoxels を受け取ります
@@ -143,7 +135,7 @@ export default function MapComponent() {
                         if (!map.getTerrain()) {
                             map.setTerrain({ source: 'gsi-terrain-source', exaggeration: 1.0 });
                         }
-                    } catch (err) {
+                    } catch {
                         // スタイルの準備が完全に整っていない場合のエラーは無視する
                     }
                 }}
@@ -186,7 +178,7 @@ export default function MapComponent() {
 
                 <MapOverlay
                     layers={deckLayers}
-                    tooltip={(info: any) => core.getTooltipHTML(info.object)}
+                    tooltip={(info: Record<string, unknown>) => core.getTooltipHTML((info as { object: unknown }).object)}
                 />
             </Map>
         </div>

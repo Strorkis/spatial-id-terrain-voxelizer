@@ -25,6 +25,7 @@ export class ElevationLegendControl implements IControl {
         `;
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     public onAdd(_map: MapGL): HTMLElement {
         this.unsubscribe = this.core.onUpdate(() => this.render());
         return this.container;
