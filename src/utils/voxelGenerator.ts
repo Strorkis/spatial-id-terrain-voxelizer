@@ -24,7 +24,8 @@ export async function generateVoxelsForBounds(
     bounds: IDEMBounds,
     resolutionZ: number,
     mapZoom: number,
-    demUrlTemplate: string = GSI_DEM_URL_TEMPLATE
+    demUrlTemplate: string = GSI_DEM_URL_TEMPLATE,
+    aggregation: 'max' | 'avg' | 'min' = 'max'
 ): Promise<VoxelBounds[]> {
     // Use dynamic DEM zoom level to avoid fetching too many small tiles
     // GSI DEM usually goes up to Z14.
@@ -62,7 +63,7 @@ export async function generateVoxelsForBounds(
     console.log(`Fetching ${tiles.length} tiles for bounds (DEM Z${demZ})...`);
 
     // Fetch in parallel
-    const promises = tiles.map(t => processTile(demZ, t.x, t.y, resolutionZ, demUrlTemplate));
+    const promises = tiles.map(t => processTile(demZ, t.x, t.y, resolutionZ, demUrlTemplate, aggregation));
     const results = await Promise.all(promises);
 
     // Flatten results
@@ -72,7 +73,14 @@ export async function generateVoxelsForBounds(
 /**
  * Process a single tile: fetch image -> generate voxels
  */
-async function processTile(z: number, x: number, y: number, resolutionZ: number, urlTemplate: string): Promise<VoxelBounds[]> {
+async function processTile(
+    z: number,
+    x: number,
+    y: number,
+    resolutionZ: number,
+    urlTemplate: string,
+    aggregation: 'max' | 'avg' | 'min'
+): Promise<VoxelBounds[]> {
     const tileUrl = urlTemplate
         .replace('{z}', z.toString())
         .replace('{x}', x.toString())
@@ -96,29 +104,52 @@ async function processTile(z: number, x: number, y: number, resolutionZ: number,
         const zoomDiff = sidZ - z;
         const unitsPerTile = Math.pow(2, zoomDiff);
 
-        // Stride determines how many pixels to skip.
-        // If generating coarse voxels (Z_sid < Z_dem), we skip pixels to avoid generating too many voxels for the same area.
+        // Stride determines how many pixels a spatial ID spans at the DEM zoom level.
         const stride = Math.max(1, Math.floor(256 / unitsPerTile));
 
         for (let py = 0; py < height; py += stride) {
             for (let px = 0; px < width; px += stride) {
-                const idx = (py * width + px) * 4;
-                const r = data[idx];
-                const g = data[idx + 1];
-                const b = data[idx + 2];
+                let maxElevation = -Infinity;
+                let minElevation = Infinity;
+                let sumElevation = 0;
+                let count = 0;
 
-                const elevation = getElevationFromRgb(r, g, b);
-                if (elevation === null) continue;
+                // Pooling within the stride x stride block
+                for (let dy = 0; dy < stride && (py + dy) < height; dy++) {
+                    for (let dx = 0; dx < stride && (px + dx) < width; dx++) {
+                        const idx = ((py + dy) * width + (px + dx)) * 4;
+                        const r = data[idx];
+                        const g = data[idx + 1];
+                        const b = data[idx + 2];
+
+                        const elevation = getElevationFromRgb(r, g, b);
+                        if (elevation !== null) {
+                            count++;
+                            sumElevation += elevation;
+                            if (elevation > maxElevation) maxElevation = elevation;
+                            if (elevation < minElevation) minElevation = elevation;
+                        }
+                    }
+                }
+
+                if (count === 0) continue;
+
+                let finalElevation = maxElevation; // default to max
+                if (aggregation === 'avg') {
+                    finalElevation = sumElevation / count;
+                } else if (aggregation === 'min') {
+                    finalElevation = minElevation;
+                }
 
                 // The Spatial ID (sid_x, sid_y) at Target Z
                 // sid_x = tile_x * unitsPerTile + (px / stride)
                 const sidX = x * unitsPerTile + Math.floor(px / stride);
                 const sidY = y * unitsPerTile + Math.floor(py / stride);
 
-                // Calculate F from elevation
+                // Calculate F from final elevation
                 const H_CONST = Math.pow(2, 25);
                 const n_sid = Math.pow(2, sidZ);
-                const f = Math.floor((n_sid * elevation) / H_CONST);
+                const f = Math.floor((n_sid * finalElevation) / H_CONST);
 
                 const sid: SpatialId = { z: sidZ, f, x: sidX, y: sidY };
                 newVoxels.push(spatialIdToVoxel(sid));

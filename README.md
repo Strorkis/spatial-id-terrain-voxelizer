@@ -1,6 +1,6 @@
-# Terrain Voxelizer
+# spatial-id-terrain-voxelizer
 
-DEM（デジタル標高モデル）タイルから動的にSpatial IDボクセルを生成するためのライブラリです。
+DEM（デジタル標高モデル）タイルから動的に [空間ID](https://www.ipa.go.jp/digital/architecture/guidelines/4dspatio-temporal-guideline.html) ボクセルを生成するためのライブラリです。
 MapLibre GL JS と Deck.gl との連携を容易にする React Hooks やコンポーネントも提供します。
 
 ![Demo Screenshot](./assets/demo-screenshot.png)
@@ -18,7 +18,11 @@ pnpm add github:Strorkis/spatial-id-terrain-voxelizer
 
 ## 🚀 開発とデモ (example)
 
-リポジトリ内のデモアプリ (`examples/demo`) を実行するには以下の手順を行います。
+本リポジトリには React 環境向けのフル機能デモ（プロフェッショナル向けレイヤーUI付き）が含まれています。
+
+1. **`examples/demo`**: React環境向けのデモアプリ
+
+デモアプリをローカルで実行するには以下の手順を行います。
 
 1. **セットアップ**:
 
@@ -26,28 +30,48 @@ pnpm add github:Strorkis/spatial-id-terrain-voxelizer
    # ライブラリの依存関係インストール
    pnpm install
 
-   # デモアプリの依存関係インストール
-   cd examples/demo
-   pnpm install
-   cd ../..
+   # ライブラリのビルドと React デモアプリの起動
+   pnpm run dev:demo
    ```
 
-2. **デモ起動**:
+### ライブラリの手動ビルド
 
-   ```bash
-   # ライブラリのビルドとデモアプリの起動
-   pnpm run dev
-   ```
+コアライブラリを手動でビルドする場合はルートディレクトリで以下を実行します。
 
-3. **ライブラリのビルド**:
-
-   ```bash
-   pnpm run build
-   ```
+```bash
+pnpm run build
+```
 
 ## 📖 API
 
-### Core (`import ... from 'spatial-id-terrain-voxelizer'`)
+### Coreライブラリ (`spatial-id-terrain-voxelizer`)
+
+本ライブラリは、内部状態・レンダリングを管理する `VoxelViewerCore` クラスと、それらを可視化するUIコントロール（完全任意利用） `VoxelLayerControl` で構成されています。UIを用いずにプログラムからAPI経由でのみ制御することも可能です。
+
+#### `VoxelViewerCore`
+
+レイヤーリスト、比較モード設定、ボクセル生成タスクを管理する中核クラスです。
+
+```typescript
+import { VoxelViewerCore } from 'spatial-id-terrain-voxelizer';
+
+const core = new VoxelViewerCore(initialLayers, localeOptions);
+core.onUpdate((state) => {
+  // state変更時にDeck.glレイヤーなどを再描画
+});
+core.generateVoxels(mapBounds, zoomLevel);
+```
+
+```typescript
+import { VoxelViewerCore } from 'spatial-id-terrain-voxelizer';
+
+const core = new VoxelViewerCore(initialLayers);
+core.onUpdate((state) => {
+  // state変更時にDeck.glレイヤーなどを再描画
+  const deckglLayers = core.getDeckLayers();
+});
+core.generateVoxels(mapBounds, zoomLevel);
+```
 
 #### `generateVoxelsForBounds(bounds, resolutionZ, mapZoom, demUrlTemplate?)`
 
@@ -58,50 +82,38 @@ pnpm add github:Strorkis/spatial-id-terrain-voxelizer
 - `mapZoom`: 現在のマップズーム（DEMタイルの詳細度決定に使用）
 - `demUrlTemplate`: DEMタイルのURLテンプレート (デフォルトは国土地理院)
 
-### React (`import { useTerrainVoxelizer, VoxelOverlay } from 'spatial-id-terrain-voxelizer/react';`)
+### React (`import { useTerrainVoxelizer, MapOverlay } from 'spatial-id-terrain-voxelizer/react';`)
 
-#### `useTerrainVoxelizer(mapRef, options)`
+#### `useTerrainVoxelizer(mapRef, initialLayers, localeOptions?)`
 
-MapLibreのカメラ状態を監視し、必要なボクセルを非同期生成するHookです。
+MapLibreのカメラ状態を監視し、必要なボクセルを非同期生成するHookです。内部で `VoxelViewerCore` をインスタンス化し、状態をReactコンポーネントに同期します。
 
 - **`mapRef`**: `react-map-gl` の `MapRef` オブジェクト (必須)
-- **`options`**:
-  - `demTileUrl` (string): 使用するDEMタイルのURLテンプレート (例: `https://cyberjapandata.gsi.go.jp/xyz/dem_png/{z}/{x}/{y}.png`)。指定しない場合は国土地理院の標高タイルが使用されます。
-  - `resolutionOffset` (number): ボクセルの解像度調整用オフセット (例: `6`)。値が大きいほど細かいボクセルが生成されます (`Z_sid = floor(MapZoom) + offset`)。
+- **`initialLayers`**: 初期レイヤー設定の配列
+- **`localeOptions`**: ツールチップなどのロケール上書き設定 (任意)
+
+戻り値:
+
+- `core`: `VoxelViewerCore` のインスタンス。UIからの操作（レイヤー追加、比較モード切替など）に使用します。
+- `viewerState`: Reactのステートとして同期された現在の `ViewerCoreState`。
+- `generateVoxels`: 現在のカメラ位置に基づいて手動でボクセル生成をトリガーする関数。
 
 ```tsx
-const { voxels, generateVoxels } = useTerrainVoxelizer(mapRef, {
-  resolutionOffset: 6
-});
+const { core, viewerState, generateVoxels } = useTerrainVoxelizer(mapRef, initialLayers);
 ```
 
-#### `VoxelOverlay`
+#### `MapOverlay`
 
-生成されたボクセルデータを MapLibre 上にオーバーレイ表示するためのコンポーネントです。内部で Deck.gl の `MapboxOverlay` と `SimpleMeshLayer` を使用しています。
+生成されたボクセルデータを MapLibre 上にオーバーレイ表示するためのコンポーネントです。内部で Deck.gl の `MapboxOverlay` を使用しています。
 
-- **`voxels`**: `useTerrainVoxelizer` から返されたボクセルデータ配列 (必須)。
-- **`layerProps`**: Deck.gl の `SimpleMeshLayer` に渡されるプロパティ (任意)。
-  - `opacity`: 不透明度 (0.0 ~ 1.0)
-  - `visible`: 表示/非表示
-  - `getColor`: ボクセルの色を決定する関数 `(d: VoxelBounds) => [r, g, b]`
-  - その他、`pickable`, `autoHighlight` などの標準的な Deck.gl プロパティが指定可能です。
-- **`tooltip`**: ツールチップの表示内容をカスタマイズする関数 (任意)。
+- **`layers`**: `core.getDeckLayers()` から取得した Deck.gl レイヤーの配列 (必須)。
+- **`tooltip`**: ツールチップのHTMLを生成する関数 (任意)。 `core.getTooltipHTML(info.object)` を渡すのが標準的です。
 
 ```tsx
-<VoxelOverlay
-  voxels={voxels}
-  // Deck.gl レイヤーのプロパティをオーバーライド
-  layerProps={{
-    opacity: 0.8,
-    getColor: (d) => {
-       // 高度(m)に応じた色分け例
-       const h = d.center.alt;
-       return [h / 10, 150, 255 - h / 10]; 
-    }
-  }}
-  // ツールチップのカスタマイズ
-  tooltip={({ object }) => object && {
-      html: `<div style="padding:4px">Height: ${object.center.alt.toFixed(1)}m</div>`
-  }}
+const deckLayers = core.getDeckLayers();
+
+<MapOverlay
+  layers={deckLayers}
+  tooltip={(info: any) => core.getTooltipHTML(info.object)}
 />
 ```
