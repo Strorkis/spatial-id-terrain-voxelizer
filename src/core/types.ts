@@ -7,6 +7,7 @@ export interface LayerConfig {
     opacity: number;
     colorMode?: 'solid' | 'elevation';
     elevationAggregation?: 'max' | 'avg' | 'min';
+    demFormat?: 'gsi' | 'terrain-rgb' | 'terrarium';
 }
 
 export interface VoxelViewerLocale {

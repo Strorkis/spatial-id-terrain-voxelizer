@@ -257,6 +257,19 @@ export const LayerManager: React.FC<LayerManagerProps> = ({ core, locale }) => {
                         </div>
 
                         <div style={{ marginBottom: '15px' }}>
+                            <label style={{ display: 'block', fontWeight: 'bold', fontSize: '0.9em', marginBottom: '4px' }}>{locale.modalLabelDEMFormat}</label>
+                            <select
+                                value={modalForm.demFormat || 'gsi'}
+                                onChange={(e) => updateModalField('demFormat', e.target.value as 'gsi' | 'terrain-rgb' | 'terrarium')}
+                                style={{ width: '100%', padding: '6px', borderRadius: '4px', border: '1px solid #ccc' }}
+                            >
+                                <option value="gsi">{locale.modalDEMFormatGSI}</option>
+                                <option value="terrain-rgb">{locale.modalDEMFormatTerrainRGB}</option>
+                                <option value="terrarium">{locale.modalDEMFormatTerrarium}</option>
+                            </select>
+                        </div>
+
+                        <div style={{ marginBottom: '15px' }}>
                             <label style={{ display: 'block', fontWeight: 'bold', fontSize: '0.9em', marginBottom: '4px' }}>{locale.modalLabelColorMode}</label>
                             <select
                                 value={modalForm.colorMode || 'solid'}

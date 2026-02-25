@@ -22,6 +22,10 @@ export interface UILocaleType {
     modalAggMax: string;
     modalAggAvg: string;
     modalAggMin: string;
+    modalLabelDEMFormat: string;
+    modalDEMFormatGSI: string;
+    modalDEMFormatTerrainRGB: string;
+    modalDEMFormatTerrarium: string;
     modalLabelOpacity: string;
     modalLabelColor: string;
     modalBtnDelete: string;
@@ -55,6 +59,10 @@ export const jaUILocale: UILocaleType = {
     modalAggMax: '最大値',
     modalAggAvg: '平均値',
     modalAggMin: '最小値',
+    modalLabelDEMFormat: '標高データの形式',
+    modalDEMFormatGSI: '地理院タイル (GSI)',
+    modalDEMFormatTerrainRGB: 'Mapbox Terrain-RGB',
+    modalDEMFormatTerrarium: 'Mapzen Terrarium',
     modalLabelOpacity: '不透明度',
     modalLabelColor: '表示色 ※単色モード時',
     modalBtnDelete: 'レイヤー削除',
@@ -88,6 +96,10 @@ export const enUILocale: UILocaleType = {
     modalAggMax: 'Maximum',
     modalAggAvg: 'Average',
     modalAggMin: 'Minimum',
+    modalLabelDEMFormat: 'DEM Format',
+    modalDEMFormatGSI: 'GSI (Japan)',
+    modalDEMFormatTerrainRGB: 'Mapbox Terrain-RGB',
+    modalDEMFormatTerrarium: 'Mapzen Terrarium',
     modalLabelOpacity: 'Opacity',
     modalLabelColor: 'Display Color (Solid Mode)',
     modalBtnDelete: 'Delete Layer',

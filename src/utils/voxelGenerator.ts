@@ -25,7 +25,8 @@ export async function generateVoxelsForBounds(
     resolutionZ: number,
     mapZoom: number,
     demUrlTemplate: string = GSI_DEM_URL_TEMPLATE,
-    aggregation: 'max' | 'avg' | 'min' = 'max'
+    aggregation: 'max' | 'avg' | 'min' = 'max',
+    demFormat: 'gsi' | 'terrain-rgb' | 'terrarium' = 'gsi'
 ): Promise<VoxelBounds[]> {
     // Use dynamic DEM zoom level to avoid fetching too many small tiles
     // GSI DEM usually goes up to Z14.
@@ -63,7 +64,7 @@ export async function generateVoxelsForBounds(
     console.log(`Fetching ${tiles.length} tiles for bounds (DEM Z${demZ})...`);
 
     // Fetch in parallel
-    const promises = tiles.map(t => processTile(demZ, t.x, t.y, resolutionZ, demUrlTemplate, aggregation));
+    const promises = tiles.map(t => processTile(demZ, t.x, t.y, resolutionZ, demUrlTemplate, aggregation, demFormat));
     const results = await Promise.all(promises);
 
     // Flatten results
@@ -79,7 +80,8 @@ async function processTile(
     y: number,
     resolutionZ: number,
     urlTemplate: string,
-    aggregation: 'max' | 'avg' | 'min'
+    aggregation: 'max' | 'avg' | 'min',
+    demFormat: 'gsi' | 'terrain-rgb' | 'terrarium'
 ): Promise<VoxelBounds[]> {
     const tileUrl = urlTemplate
         .replace('{z}', z.toString())
@@ -105,24 +107,26 @@ async function processTile(
         const unitsPerTile = Math.pow(2, zoomDiff);
 
         // Stride determines how many pixels a spatial ID spans at the DEM zoom level.
-        const stride = Math.max(1, Math.floor(256 / unitsPerTile));
+        // We use 'width' instead of 256 because some DEM sources (e.g. Mapbox/Mapterhorn) use 512x512 tiles.
+        const strideX = Math.max(1, Math.floor(width / unitsPerTile));
+        const strideY = Math.max(1, Math.floor(height / unitsPerTile));
 
-        for (let py = 0; py < height; py += stride) {
-            for (let px = 0; px < width; px += stride) {
+        for (let py = 0; py < height; py += strideY) {
+            for (let px = 0; px < width; px += strideX) {
                 let maxElevation = -Infinity;
                 let minElevation = Infinity;
                 let sumElevation = 0;
                 let count = 0;
 
-                // Pooling within the stride x stride block
-                for (let dy = 0; dy < stride && (py + dy) < height; dy++) {
-                    for (let dx = 0; dx < stride && (px + dx) < width; dx++) {
+                // Pooling within the stride block
+                for (let dy = 0; dy < strideY && (py + dy) < height; dy++) {
+                    for (let dx = 0; dx < strideX && (px + dx) < width; dx++) {
                         const idx = ((py + dy) * width + (px + dx)) * 4;
                         const r = data[idx];
                         const g = data[idx + 1];
                         const b = data[idx + 2];
 
-                        const elevation = getElevationFromRgb(r, g, b);
+                        const elevation = getElevationFromRgb(r, g, b, demFormat);
                         if (elevation !== null) {
                             count++;
                             sumElevation += elevation;
@@ -142,9 +146,8 @@ async function processTile(
                 }
 
                 // The Spatial ID (sid_x, sid_y) at Target Z
-                // sid_x = tile_x * unitsPerTile + (px / stride)
-                const sidX = x * unitsPerTile + Math.floor(px / stride);
-                const sidY = y * unitsPerTile + Math.floor(py / stride);
+                const sidX = x * unitsPerTile + Math.floor(px / strideX);
+                const sidY = y * unitsPerTile + Math.floor(py / strideY);
 
                 // Calculate F from final elevation
                 const H_CONST = Math.pow(2, 25);

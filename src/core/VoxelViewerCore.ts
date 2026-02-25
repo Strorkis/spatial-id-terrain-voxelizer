@@ -118,12 +118,13 @@ export class VoxelViewerCore {
         const isNewlyVisible = updates.visible === true && !oldLayer.visible;
         const urlChanged = updates.sourceUrl !== undefined && updates.sourceUrl !== oldLayer.sourceUrl;
         const aggChanged = updates.elevationAggregation !== undefined && updates.elevationAggregation !== oldLayer.elevationAggregation;
+        const formatChanged = updates.demFormat !== undefined && updates.demFormat !== oldLayer.demFormat;
 
         const isCurrentlyVisible = this.layers.find(l => l.id === id)?.visible;
 
-        if (isNewlyVisible || ((urlChanged || aggChanged) && isCurrentlyVisible)) {
+        if (isNewlyVisible || ((urlChanged || aggChanged || formatChanged) && isCurrentlyVisible)) {
             // Force re-generation
-            if (urlChanged || aggChanged) {
+            if (urlChanged || aggChanged || formatChanged) {
                 // clear cache for this layer so it fetches fresh data
                 delete this.layerVoxels[id];
             }
@@ -203,7 +204,8 @@ export class VoxelViewerCore {
                 targetZ,
                 zoom,
                 layer.sourceUrl,
-                layer.elevationAggregation || 'max'
+                layer.elevationAggregation || 'max',
+                layer.demFormat || 'gsi'
             );
             newLayerVoxels[layer.id] = voxels;
         }));
