@@ -30,7 +30,9 @@ jobs:
 
       - name: Build Demo
         working-directory: ./examples/demo
-        run: pnpm run build
+        run: |
+          pnpm install
+          pnpm run build
 
       - name: Lint
         run: pnpm run lint
