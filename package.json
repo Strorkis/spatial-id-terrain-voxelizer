@@ -23,7 +23,7 @@
     },
     "scripts": {
         "build": "tsup src/index.ts src/react.ts --format cjs,esm --dts",
-        "lint": "eslint .",
+        "lint": "cd examples/demo && pnpm run lint",
         "dev:demo": "cd examples/demo && pnpm run dev"
     },
     "dependencies": {

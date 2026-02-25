@@ -34,5 +34,6 @@ jobs:
           pnpm install
           pnpm run build
 
-      - name: Lint
+      - name: Lint Demo
+        working-directory: ./examples/demo
         run: pnpm run lint
