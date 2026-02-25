@@ -27,7 +27,16 @@ export const AIST_DEM_URL_TEMPLATE = 'https://tiles.gsj.jp/tiles/elev/mixed/{z}/
  * If X = 8388608: h = N/A
  * If X > 8388608: h = (X - 16777216) * 0.01
  */
-export function getElevationFromRgb(r: number, g: number, b: number): number | null {
+export function getElevationFromRgb(r: number, g: number, b: number, format: 'gsi' | 'terrain-rgb' | 'terrarium' = 'gsi'): number | null {
+  if (format === 'terrain-rgb') {
+    // Mapbox Terrain-RGB: height = -10000 + ((R * 256 * 256 + G * 256 + B) * 0.1)
+    return -10000 + ((r * 65536 + g * 256 + b) * 0.1);
+  } else if (format === 'terrarium') {
+    // Mapzen Terrarium: height = (R * 256 + G + B / 256) - 32768
+    return (r * 256 + g + b / 256) - 32768;
+  }
+
+  // GSI (default)
   const x = r * 65536 + g * 256 + b;
   const resolution = 0.01;
 
