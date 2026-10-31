@@ -3,6 +3,8 @@
 DEM（デジタル標高モデル）タイルから動的に [空間ID](https://www.ipa.go.jp/digital/architecture/guidelines/4dspatio-temporal-guideline.html) ボクセルを生成するためのライブラリです。
 MapLibre GL JS と Deck.gl との連携を容易にする React Hooks やコンポーネントも提供します。
 
+> **保守の状況**: このリポジトリはほぼ保守していません (依存の更新と CI の維持のみ)。
+
 ![Demo Screenshot](./assets/demo-screenshot.png)
 
 > **Note**: 現在のバージョンは **MapLibre GL JS** との連携機能が主ですが、Core ロジックは地図ライブラリに依存しない設計となっています。将来的に Cesium 等への対応も計画しています。
