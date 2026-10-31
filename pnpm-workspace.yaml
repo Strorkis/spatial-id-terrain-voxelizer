@@ -1,0 +1,7 @@
+# pnpm 11 の設定 (pnpm 11 は package.json の "pnpm" 欄を読まない)。
+# packages は書かない: ルートはライブラリ1つだけのプロジェクトで、examples/demo は自前の lockfile を持つ。
+
+allowBuilds:
+  # esbuild の postinstall はバイナリの確かめと最適化だけで、バイナリ自体は
+  # optionalDependencies の @esbuild/<platform> から入る。動かさなくても tsup・vite は動く。
+  esbuild: false
