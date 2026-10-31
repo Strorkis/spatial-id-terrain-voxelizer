@@ -1,3 +1,7 @@
+# 凍結中 (2026-10-31〜): version updates の PR は開かない (open-pull-requests-limit: 0)。
+# security updates はこの上限とは別の仕組み (開いている PR は最大 10) で動き続け、
+# directories・commit-message などの設定はそちらにも使われる。
+# 凍結を解くときは open-pull-requests-limit の行を消す。
 version: 2
 updates:
   # ルートのライブラリと examples/demo は別々の lockfile を持つ
@@ -7,6 +11,7 @@ updates:
       - "/examples/demo"
     schedule:
       interval: "monthly"
+    open-pull-requests-limit: 0
     # 公開から日が浅い版は避ける (供給網の事故の多くは公開から数日で見つかる)
     cooldown:
       default-days: 7
@@ -25,6 +30,7 @@ updates:
     directory: "/"
     schedule:
       interval: "monthly"
+    open-pull-requests-limit: 0
     cooldown:
       default-days: 7
     groups:
