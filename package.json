@@ -27,20 +27,19 @@
         "dev:demo": "cd examples/demo && pnpm run dev"
     },
     "dependencies": {
-        "@deck.gl/core": "^9.2.6",
-        "@deck.gl/layers": "^9.2.6",
-        "@deck.gl/mapbox": "^9.2.6",
-        "@deck.gl/mesh-layers": "^9.2.6",
-        "@luma.gl/engine": "^9.2.6",
+        "@deck.gl/core": "^9.4.1",
+        "@deck.gl/layers": "^9.4.1",
+        "@deck.gl/mapbox": "^9.4.1",
+        "@deck.gl/mesh-layers": "^9.4.1",
+        "@luma.gl/engine": "^9.4.2",
         "maplibre-gl": "^5.15.0"
     },
     "devDependencies": {
         "@types/react": "^19.2.8",
         "@types/react-dom": "^19.2.3",
-        "eslint": "^9.0.0",
         "react": "^19.2.3",
         "react-map-gl": "^8.1.0",
-        "tsup": "^8.3.5",
+        "tsup": "^9.0.0",
         "typescript": "~5.9.3"
     },
     "packageManager": "pnpm@11.28.10"
