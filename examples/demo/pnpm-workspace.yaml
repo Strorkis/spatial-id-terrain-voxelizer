@@ -1,0 +1,9 @@
+# pnpm 11 の設定 (pnpm 11 は package.json の "pnpm" 欄を読まない)。
+# このファイルがあるので、demo はルートとは別のプロジェクトとして自前の lockfile で入る。
+# 中身の理由はルートの pnpm-workspace.yaml を参照。
+
+overrides:
+  texture-compressor: '-'
+
+allowBuilds:
+  esbuild: false

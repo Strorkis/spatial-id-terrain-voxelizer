@@ -1,0 +1,13 @@
+# pnpm 11 の設定 (pnpm 11 は package.json の "pnpm" 欄を読まない)。
+# packages は書かない: ルートはライブラリ1つだけのプロジェクトで、examples/demo は自前の lockfile を持つ。
+
+overrides:
+  # @loaders.gl/textures は texture-compressor を `npx texture-compressor` で呼ぶだけで import しない
+  # (Node で圧縮テクスチャを書き出す CompressedTextureWriter のみ)。依存として入ると
+  # 脆弱な image-size@0.7 (GHSA-w3rx-r6r6-pgpr) が付いてくるので、木から外す。
+  texture-compressor: '-'
+
+allowBuilds:
+  # esbuild の postinstall はバイナリの確かめと最適化だけで、バイナリ自体は
+  # optionalDependencies の @esbuild/<platform> から入る。動かさなくても tsup・vite は動く。
+  esbuild: false

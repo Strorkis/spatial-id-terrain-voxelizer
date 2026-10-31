@@ -1,0 +1,35 @@
+version: 2
+updates:
+  # ルートのライブラリと examples/demo は別々の lockfile を持つ
+  - package-ecosystem: "npm"
+    directories:
+      - "/"
+      - "/examples/demo"
+    schedule:
+      interval: "monthly"
+    # 公開から日が浅い版は避ける (供給網の事故の多くは公開から数日で見つかる)
+    cooldown:
+      default-days: 7
+    groups:
+      # minor・patch はまとめて1つの PR に。major は個別の PR で来る
+      npm-minor-and-patch:
+        update-types:
+          - "minor"
+          - "patch"
+    commit-message:
+      prefix: "build(deps)"
+      prefix-development: "build(deps-dev)"
+
+  # ワークフローは /.github/workflows にしか無い
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+    cooldown:
+      default-days: 7
+    groups:
+      github-actions:
+        patterns:
+          - "*"
+    commit-message:
+      prefix: "ci"

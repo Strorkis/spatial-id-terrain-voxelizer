@@ -1,29 +1,37 @@
 name: CI Check
 
 on:
+  push:
+    branches: ["main"]
   pull_request:
     branches: ["main"]
 
+permissions:
+  contents: read
+
 jobs:
+  # ジョブ名 deploy はブランチ保護の必須チェックに使っているので変えない (138d6a7)
   deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
+      # pnpm の版は package.json の packageManager から読む
       - name: Install pnpm
-        uses: pnpm/action-setup@v2
-        with:
-          version: 9
+        uses: pnpm/action-setup@v6
 
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
-          node-version: 20
+          node-version: 22
           cache: 'pnpm'
+          cache-dependency-path: |
+            pnpm-lock.yaml
+            examples/demo/pnpm-lock.yaml
 
       - name: Install Dependencies
-        run: pnpm install
+        run: pnpm install --frozen-lockfile
 
       - name: Build Library
         run: pnpm run build
@@ -31,7 +39,7 @@ jobs:
       - name: Build Demo
         working-directory: ./examples/demo
         run: |
-          pnpm install
+          pnpm install --frozen-lockfile
           pnpm run build
 
       - name: Lint Demo
