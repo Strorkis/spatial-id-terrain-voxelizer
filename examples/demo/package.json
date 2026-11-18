@@ -21,7 +21,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "maplibre-gl": "^5.0.0",
+    "maplibre-gl": "^6.4.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-map-gl": "^8.0.0",
